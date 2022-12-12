@@ -10,7 +10,7 @@
 <body>
   <div class='container my-5'>
     <h2>List of Clients</h2>
-    <a class='btn btn-primary' href="/create.php" role='button'>New Client</a>
+    <a class='btn btn-primary' href="./create.php" role='button'>New Client</a>
     <table class="table">
       <thead>
         <tr>
@@ -26,8 +26,8 @@
       <tbody>
         <?php
         $server_name = "localhost";
-        $user_name = "root";
-        $password = "";
+        $user_name = "Virag";
+        $password = "Beautyflower1";
         $database = "CRUD";
 
         $connection = new mysqli($server_name, $user_name, $password, $database);
@@ -36,7 +36,7 @@
           die("Connection failed: " . $connection->connect_error);
         }
 
-        $sql = "SELECT FROM clients";
+        $sql = "SELECT * FROM clients";
         $result = $connection->query($sql);
 
         if(!$result) {
@@ -53,8 +53,10 @@
           <td>$row[address]</td>
           <td>$row[created_at]</td>
           <td>
-            <a class='btn btn-primary btn-sm' href='/edit.php'>Edit</a>
-            <a class='btn btn-danger btn-sm' href='/delete.php'>Delete</a>
+            <a class='btn btn-primary btn-sm' 
+            href='/edit.php?id=$row[id]'>Edit</a>
+            <a class='btn btn-danger btn-sm' 
+            href='/delete.php?id=$row[id]'>Delete</a>
           </td>
         </tr>
           ";
