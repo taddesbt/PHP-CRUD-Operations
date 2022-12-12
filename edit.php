@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 $server_name = "localhost";
 $user_name = "Virag";
@@ -7,9 +7,37 @@ $database = "CRUD";
 
 $connection = new mysqli($server_name, $user_name, $password, $database);
 
-$name = $email = $phone = $address = $errorMessage = $successMessage = '';
+$name = $email = $phone = $address = $errorMessage = $successMessage = $id = '';
 
-if($_SERVER['REQUEST_METHOD'] == 'POST') {
+if($_SERVER['REQUEST_METHOD'] == 'GET') {
+  // GET method: show the data of the client
+
+  if(!isset($_GET["id"])) {
+    header("location: ./index.php");
+    exit;
+  }
+
+  $id = $_GET["id"];
+
+  // read the selected row of the client from the database table
+
+  $sql = "SELECT * FROM clients WHERE id=$id";
+  $result = $connection->query($sql);
+  $row = $result->fetch_assoc();
+
+  if(!$row) {
+    header("location: ./index.php");
+    exit;
+  }
+
+  $name = $row["name"];
+  $email = $row["email"];
+  $phone = $row["phone"];
+  $address = $row["address"];
+
+} else {
+  // POST method: update the data of the client
+
   $name = $_POST["name"];
   $email = $_POST["email"];
   $phone = $_POST["phone"];
@@ -21,7 +49,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
       break;
     }
 
-    $sql = "INSERT INTO clients (name, email, phone, address)" . "VALUES ('$name', '$email', '$phone', '$address')";
+    $sql = "UPDATE clients " . "SET name = $name, email = $email, phone = $phone, address = $address" . "WHERE id = $id";
     $result = $connection->query($sql);
 
     if(!$result) {
@@ -29,13 +57,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
       break;
     }
 
-    $name = $email = $phone = $address = '';
     $successMessage = "Client added correctly!";
 
     header("location: ./index.php");
 
   } while (false);
+
 }
+
 ?>
 
 
@@ -63,6 +92,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
      ?>
     <form method='POST'>
+      <input type="hidden" value="<?php echo $id; ?>" name='id'>
       <div class='row mb-3'>
         <label class='col-sm-3 col-form-label'>Name</label>
         <div class='col-sm-6'>
